@@ -598,6 +598,22 @@ contains
     noahmp%model%soilcol = int(tmpr4)
     deallocate(flds)
 
+
+
+    !----------------------
+    ! Read vegetation greenness, monthly average
+    !----------------------
+
+    allocate(flds(1))
+    write(filename, fmt="(A,I0,A)") trim(noahmp%nmlist%input_dir)//'C',noahmp%domain%ni, '.leaf_area_index.tile*.nc'
+    flds(1)%short_name = 'leaf_area_index'
+    flds(1)%nrec = 12; flds(1)%ptr2r4 => tmp2r4
+    call read_tiled_file(noahmp, filename, flds, rc=rc)
+    if (ChkErr(rc,__LINE__,u_FILE_u)) return
+    noahmp%model%xlaixy(:,:) = dble(tmp2r4)
+    deallocate(flds)
+
+
     !----------------------
     ! Set land-sea mask (dry)
     !----------------------
